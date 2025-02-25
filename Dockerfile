@@ -1,5 +1,5 @@
 # build rust binary from src
-FROM rust:1.84-slim AS builder
+FROM rust:1.85-slim AS builder
 
 WORKDIR /usr/src/app
 

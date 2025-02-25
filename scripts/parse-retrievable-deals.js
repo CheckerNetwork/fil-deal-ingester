@@ -8,6 +8,7 @@ import split2 from 'split2'
 // See https://docs.filecoin.io/networks/mainnet#genesis
 const GENESIS_TS = new Date('2020-08-24T22:00:00Z').getTime()
 const BLOCK_TIME = 30_000 // 30 seconds
+const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 
 const stats = {
   total: 0n,
@@ -102,12 +103,15 @@ function * processDeal (deal) {
   assert.strictEqual(typeof StartEpoch, 'number', `StartEpoch is not a number: ${JSON.stringify(deal.Proposal)}`)
   const started = StartEpoch * BLOCK_TIME + GENESIS_TS
 
+  // Skip deals that are less than 24 hours old, to account for IPNI ingestion delays
+  if (Date.now() - started < ONE_DAY_IN_MILLISECONDS) return
+
   // Calculate when the deal expires
   assert.strictEqual(typeof EndEpoch, 'number', `EndEpoch is not a number: ${JSON.stringify(deal.Proposal)}`)
   const expires = EndEpoch * BLOCK_TIME + GENESIS_TS
 
   // Skip deals that have expired or expire in less than 24 hours
-  const tomorrow = Date.now() + 24 /* hours/day */ * 3600_000
+  const tomorrow = Date.now() + ONE_DAY_IN_MILLISECONDS
   if (expires < tomorrow) return
 
   // Skip deals that don't have payload CID metadata
