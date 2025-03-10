@@ -140,9 +140,9 @@ dependencies = [
 
 [[package]]
 name = "json-event-parser"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "651fe6b623f7be34bce67ba0d211bcc4d258b451f6cdcfbb964b5c8ebfdfb854"
+checksum = "73267b6bffa5356bd46cfa89386673e9a7f62f4eb3adcb45b1bd031892357853"
 
 [[package]]
 name = "libc"
