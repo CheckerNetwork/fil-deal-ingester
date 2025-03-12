@@ -46,7 +46,7 @@ Set up an app, volume and secrets:
 
 ```sh
 fly apps create --name=fil-deal-ingester --org=<org-name>
-fly volumes create fil_deal_ingester_data --size=80 --app=fil-deal-ingester --region=<region> --snapshot-retention=1
+fly volumes create fil_deal_ingester_data --size=80 --app=fil-deal-ingester --region=cdg --snapshot-retention=1
 fly secrets set DATABASE_URL=<postgres-connection-string> --app=fil-deal-ingester
 fly secrets set SLACK_WEBHOOK_URL=<slack-webhook-url> --app=fil-deal-ingester
 ```
@@ -57,11 +57,12 @@ Finally, create the machine with the following command:
 fly machine run . \
 --app=fil-deal-ingester \
 --schedule=daily \
---region=<region> \
+--region=cdg \
 --volume fil_deal_ingester_data:/usr/src/app/generated \
 --env JSON_CONVERTER_BIN=/usr/src/app/fil-deal-ingester \
 --env ENVIRONMENT=docker \
---vm-size=shared-cpu-1x
+--vm-size=shared-cpu-2x \
+--vm-memory=512
 ```
 
 ### Updating existing machine
