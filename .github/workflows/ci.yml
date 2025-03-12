@@ -1,14 +1,9 @@
 name: CI
 on:
-  # CI triggers
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  # Deployment triggers
-  workflow_dispatch:
-  schedule:
-    - cron: '0 7 * * *' # Run every day at 7am UTC
 
 jobs:
   lint-scripts:
@@ -41,8 +36,7 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
 
   deploy:
-    # Only run on cron schedule or manual dispatch
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: github.ref == 'refs/heads/main'
     needs: [lint-scripts, build-ingester]
     runs-on: ubuntu-latest
     steps:
