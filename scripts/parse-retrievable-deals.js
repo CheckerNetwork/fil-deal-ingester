@@ -119,6 +119,11 @@ function * processDeal (deal) {
   assert.strictEqual(typeof Label, 'string', `Label is not a string: ${JSON.stringify(deal.Proposal)}`)
   if (!Label || !Label.match(/^(bafy|bafk|Qm)/)) return
 
+  // bafkqaaa is a CID for an empty file
+  // Spark retrieval check always fails because https://cid.contact/cid/bafkqaaa returns an error.
+  // We agreed to remove deals with that Label from the list of eligible deals
+  if (Label === 'bafkqaaa') return
+
   assert.strictEqual(typeof Provider, 'string', `Provider is not a string: ${JSON.stringify(deal.Proposal)}`)
   assert.strictEqual(typeof PieceCID['/'], 'string', `PieceCID is not a CID link: ${JSON.stringify(deal.Proposal)}`)
   const entry = {
