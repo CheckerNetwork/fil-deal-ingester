@@ -15,7 +15,7 @@
   "homepage": "https://github.com/filecoin-station/fil-deal-ingester#readme",
   "dependencies": {
     "dotenv": "^16.5.0",
-    "pg": "^8.16.1",
+    "pg": "^8.16.2",
     "split2": "^4.2.0",
     "varint": "^6.0.0"
   }
