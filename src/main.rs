@@ -26,14 +26,11 @@ fn main() -> Result<()> {
 
     ensure!(start_event == JsonEvent::StartObject);
 
-    // File being read is a snapshot of the JSON-RPC
-    // response containing market deals.
+    // File being read is a snapshot of the JSON-RPC response
+    // containing market deals inside the "result object".
     //
-    // These market deals are found in the "result" object.
-    //
-    // We need to skip all object keys ("id", "jsonrpc", etc)
-    // and their respective values until we find
-    // the "result" key after which the result object starts.
+    // We need to skip all object keys and their values
+    // until we find the "result" key and start of the "result" object.
     log::debug!("looking for 'result' object");
     loop {
         match reader.parse_next()? {
