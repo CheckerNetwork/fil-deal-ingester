@@ -26,19 +26,29 @@ fn main() -> Result<()> {
 
     ensure!(start_event == JsonEvent::StartObject);
 
+    let mut in_result_object = false;
     loop {
-        let event = reader.parse_next()?;
-        log::debug!("{:?}", event);
-
-        match event {
-            JsonEvent::ObjectKey(_) => parse_deal(&mut reader)?,
-            JsonEvent::EndObject => match reader.parse_next()? {
+        match reader.parse_next()? {
+            // File being read is a snapshot of the JSON-RPC response
+            // containing market deals inside the "result" object.
+            // We need to skip all object keys and their values
+            // until we find the "result" key and start of the "result" object.
+            JsonEvent::ObjectKey(key) if !in_result_object && key == "result" => {
+                log::debug!("'result' key found, looking for start of result object");
+                ensure!(reader.parse_next()? == JsonEvent::StartObject);
+                log::debug!("'result' object found");
+                in_result_object = true;
+            }
+            JsonEvent::ObjectKey(_) if in_result_object => parse_deal(&mut reader)?,
+            JsonEvent::EndObject if in_result_object => match reader.parse_next()? {
                 JsonEvent::Eof => break,
                 event => {
                     bail!("unexpected JSON event after EndObject: {:?}", event);
                 }
             },
-            _ => bail!("unexpected JSON event: {:?}", event),
+            event if in_result_object => bail!("unexpected JSON event: {:?}", event),
+            // Ignore events before "result" key
+            _ => continue,
         }
     }
 
