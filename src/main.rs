@@ -28,7 +28,7 @@ fn main() -> Result<()> {
 
     loop {
         let event = reader.parse_next()?;
-        log::debug!("{:?}", event);
+        log::debug!("{event:?}");
 
         match event {
             JsonEvent::ObjectKey(_) => parse_deal(&mut reader)?,
