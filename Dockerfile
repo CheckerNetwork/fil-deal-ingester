@@ -9,7 +9,7 @@ COPY ./Cargo.* .
 RUN cargo build --release
 
 # use node image to run the binary
-FROM node:24-slim AS runtime
+FROM node:25-slim AS runtime
 
 WORKDIR /usr/src/app
 
