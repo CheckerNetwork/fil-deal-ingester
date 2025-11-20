@@ -9,7 +9,7 @@ jobs:
   lint-scripts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -19,7 +19,7 @@ jobs:
   build-ingester:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install rust
         run: rustup default stable
       - name: Install rustfmt Components
@@ -40,7 +40,7 @@ jobs:
     needs: [lint-scripts, build-ingester]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl machine update ${{ secrets.FLY_MACHINE_ID }} --dockerfile Dockerfile --app ${{ vars.FLY_APP }} -y
         env:
